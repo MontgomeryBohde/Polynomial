@@ -5,7 +5,7 @@ C++ Polynomial Library with Least Squares Regression, Root Finding, Differentiat
 The only dependency is Eigen, which is a C++ Linear Algebra library required for the least-squares regression and root-finding algorithims.
 
 # Example Code: 
-'''
+```
 // create a polynomial from a list of coefficients:
 Polynomial poly({-4, 0, 1); // x^2 - 4
 
@@ -24,4 +24,4 @@ Polynomial derivative = poly2.deriv();
 double integral = poly2.integ(0, 3);
  
 // see the docs for all the available functions
-'''
+```
