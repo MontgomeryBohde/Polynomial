@@ -115,7 +115,7 @@ double Polynomial::val(const auto& x){
 
 std::vector<double> Polynomial::roots(const double& real_threshold){
     /* Return all real roots of the polynomial. The roots are calculated using the eigenvalues of the companion matrix
-     * and will be automatically sorted.
+     * and will be sorted.
      * @param real_threshold: The maximum imagninary threshold at which a root can still be considered real
      */
     std::vector<double> roots;
@@ -135,6 +135,7 @@ std::vector<double> Polynomial::roots(const double& real_threshold){
             roots.push_back(l.real());
         }
     }
+    sort(roots.begin(), roots.end());
     return roots;
 }
 
@@ -158,6 +159,7 @@ std::vector<double> Polynomial::roots(const auto& lb, const auto& ub, const doub
             roots.push_back(l.real());
         }
     }
+    sort(roots.begin(), roots.end());
     return roots;
 }
 
