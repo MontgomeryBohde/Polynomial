@@ -8,7 +8,7 @@
 
 using namespace polynomial;
 
-Polynomial::Polynomial(std::vector<double> nums) {
+Polynomial::Polynomial(const std::vector<double>& nums) {
     /* Instantiate a polynomial from a list of coefficients in increasing order. You must include all terms, including
      * a constant term at the beginning and terms with a 0 coefficient EX: x^2 = {0, 0, 1}
      */
@@ -16,13 +16,13 @@ Polynomial::Polynomial(std::vector<double> nums) {
     degree = nums.size() - 1; // subtract one because the polynomial vector also includes a constant term
     coefs = nums;
     // remove extra terms at the front if the coeficient is 0 to ensure stability with rest of the code
-    while (coefs.back() == 0 and degree > 0){
+    while (coefs.back() == 0 && degree > 0){
         coefs.pop_back();
         degree -= 1;
     }
 }
 
-Polynomial::Polynomial(std::vector<double> x, std::vector<double> y, int order){
+Polynomial::Polynomial(const std::vector<double>& x, const std::vector<double>& y, const int& order){
     /* Fit an n-th degree polynomial of y as a function of x using least squares regression. Order is the degree
      * of the resulting polynomial
      */
@@ -50,32 +50,32 @@ Polynomial::Polynomial(std::vector<double> x, std::vector<double> y, int order){
     degree = order;
 }
 
-Polynomial Polynomial::operator+(const auto&num){
+Polynomial Polynomial::operator+(const double& num){
     std::vector<double> new_coefs(coefs);
     new_coefs[0] += num;
     return Polynomial(new_coefs);
 }
 
-Polynomial Polynomial::operator-(const auto& num) {
+Polynomial Polynomial::operator-(const double& num) {
     std::vector<double> new_coefs(coefs);
     new_coefs[0] -= num;
     return Polynomial(new_coefs);
 }
 
-Polynomial Polynomial::operator*(const auto& num){
+Polynomial Polynomial::operator*(const double& num){
     std::vector<double> new_coefs(degree+1);
     std::transform(coefs.begin(), coefs.end(), new_coefs.begin(), [&num](double elm){return elm *= num;});
     return Polynomial(new_coefs);
 }
 
-Polynomial Polynomial::operator/(const auto& num) {
+Polynomial Polynomial::operator/(const double& num) {
     assert(num != 0);
     std::vector<double> new_coefs(degree+1);
     std::transform(coefs.begin(), coefs.end(), new_coefs.begin(), [&num](double elm){return elm /= num;});
     return Polynomial(new_coefs);
 }
 
-Polynomial Polynomial::operator+(Polynomial other){
+Polynomial Polynomial::operator+(const Polynomial& other){
     int new_degree = std::max(degree, other.degree);
     std::vector<double> new_coefs(new_degree+1);
     for (int i = 0; i <= degree; i++){
@@ -87,7 +87,7 @@ Polynomial Polynomial::operator+(Polynomial other){
     return Polynomial(new_coefs);
 }
 
-Polynomial Polynomial::operator-(Polynomial other){
+Polynomial Polynomial::operator-(const Polynomial& other){
     int new_degree = std::max(degree, other.degree);
     std::vector<double> new_coefs(new_degree+1);
     for (int i = 0; i <= degree; i++){
@@ -99,11 +99,11 @@ Polynomial Polynomial::operator-(Polynomial other){
     return Polynomial(new_coefs);
 }
 
-double Polynomial::operator()(const auto& x){
+double Polynomial::operator()(const double& x){
     return val(x);
 }
 
-double Polynomial::val(const auto& x){
+double Polynomial::val(const double& x){
     /* Return the value of the polynomial at x
      */
     double res = coefs[0];
@@ -115,7 +115,7 @@ double Polynomial::val(const auto& x){
 
 std::vector<double> Polynomial::roots(const double& real_threshold){
     /* Return all real roots of the polynomial. The roots are calculated using the eigenvalues of the companion matrix
-     * and will be sorted.
+     * and will be automatically sorted.
      * @param real_threshold: The maximum imagninary threshold at which a root can still be considered real
      */
     std::vector<double> roots;
@@ -139,7 +139,7 @@ std::vector<double> Polynomial::roots(const double& real_threshold){
     return roots;
 }
 
-std::vector<double> Polynomial::roots(const auto& lb, const auto& ub, const double& real_threshold){
+std::vector<double> Polynomial::roots(const double& lb, const double& ub, const double& real_threshold){
     /* Return all real roots within the specified bounds, exclusive: (lb, ub)
      */
     std::vector<double> roots;
@@ -163,7 +163,7 @@ std::vector<double> Polynomial::roots(const auto& lb, const auto& ub, const doub
     return roots;
 }
 
-std::vector<double> Polynomial::budans_roots(const auto& lb, const auto& ub, const int& newton_iter, const double& precision){
+std::vector<double> Polynomial::budans_roots(const double& lb, const double& ub, const int& newton_iter, const double& precision){
     /* This polynomial root function uses budan's theorem to aproximate a range that each root lies within, then
      * newtons method is used to find the exact value of the root. This method is faster than the other roots method when
      * the polynomial has a degree higher than 10
@@ -278,7 +278,7 @@ Polynomial Polynomial::integ(){
     return Polynomial(new_coefs);
 }
 
-Polynomial Polynomial::integ(const auto& lbnd) {
+Polynomial Polynomial::integ(const double& lbnd) {
     /* Compute the indefinite integral of the polynomial, but scale it to be 0 at lbnd
      */
     std::vector<double> new_coefs(degree+2);
@@ -289,7 +289,7 @@ Polynomial Polynomial::integ(const auto& lbnd) {
     return (temp - temp.val(lbnd));
 }
 
-double Polynomial::integ(const auto& lb, const auto& ub) {
+double Polynomial::integ(const double& lb, const double& ub) {
     /* Compute the definite integral of the polynomial from lb to ub
      */
     std::vector<double> new_coefs(degree+2);
@@ -300,7 +300,7 @@ double Polynomial::integ(const auto& lb, const auto& ub) {
     return poly.val(ub) - poly.val(lb);
 }
 
-std::vector<double> Polynomial::solve(const auto& num){
+std::vector<double> Polynomial::solve(const double& num){
     /* Solve for all occurrences of when the polynomial equals num, by default this uses the companion matrix method, so
      * for very high degree polynomials you should consider using budan's method
      */
@@ -310,7 +310,7 @@ std::vector<double> Polynomial::solve(const auto& num){
     return temp.roots();
 }
 
-double Polynomial::solve(const auto& num, const auto& lb, const auto& ub, const int& newton_iter){
+double Polynomial::solve(const double& num, const double& lb, const double& ub, const int& newton_iter){
     /* This version of solve is meant for when a function is strictly monotonic over the interval (lb, ub) and it is known
      * that exactly one solution to exists within the bounds, for example solving a cdf function.
      */
